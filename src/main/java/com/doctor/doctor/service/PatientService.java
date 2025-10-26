@@ -31,7 +31,7 @@ public class PatientService {
     @Transactional
     public void createPatient(CreatePatientRequest request) {
         if(patientRepository.existsByEmail(request.getEmail())) {
-            logger.info("Trying to create patient with mail " + request.getEmail()) ;
+            logger.info("Trying to create patient with mail that is already taken: " + request.getEmail()) ;
             throw new EmailAlreadyUsedException("There is already patient with That mail");
         }
         Patient patient = new Patient(request);
@@ -41,7 +41,7 @@ public class PatientService {
 
     @Transactional(readOnly = true)
     public List<Patient> findPatient(String name, String email) {
-        logger.info("Search patient by name and email " + name + " " + email);
+        logger.info("Search patient by name and email: " + name + " " + email);
         if (name != null && email != null) {
             return patientRepository.findByNameAndEmail(name, email);
         } else if (name != null) {

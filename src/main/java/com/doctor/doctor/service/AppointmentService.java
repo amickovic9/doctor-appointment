@@ -40,7 +40,7 @@ public class AppointmentService {
 
     @Transactional(readOnly = true)
     public List<Appointment> searchAppointments(String doctorName, String patientName, AppointmentStatus status) {
-        logger.info("Search: doctor name: " + doctorName + " patient name: " + patientName, " status " + status);
+        logger.info("Search: doctor name: " + doctorName + " patient name: " + patientName + " status " + status);
         if (doctorName != null && patientName != null && status != null) {
             return appointmentRepository.findByDoctorNameAndPatientNameAndStatus(doctorName, patientName, status);
         } else if (doctorName != null && patientName != null) {
