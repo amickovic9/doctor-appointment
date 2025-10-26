@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class DoctorService {
+public class  DoctorService {
 
     @Autowired
     private DoctorRepository doctorRepository;
@@ -41,12 +41,12 @@ public class DoctorService {
 
     @Transactional(readOnly = true)
     public List<Doctor> findDoctorByName(String name) {
-        logger.info("Search by name" +  name);
+        logger.info("Search by name: " +  name);
         return doctorRepository.findByName(name);
     }
 
     public List<Doctor> findDoctor(String name, String email) {
-        logger.info("Search by name and email" + name + " " + email);
+        logger.info("Search by name and email: " + name + " " + email);
         if(name != null & email != null){
             return doctorRepository.findByNameAndEmail(name, email);
         }
