@@ -9,7 +9,6 @@ import org.springframework.context.annotation.Bean;
 
 @Configuration
 public class RabbitMQConfig {
-
     public static final String QUEUE = "queue";
 
     @Bean
