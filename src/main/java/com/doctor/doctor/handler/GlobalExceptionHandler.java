@@ -18,17 +18,14 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<Map<String, String>> handleValidationExceptions(
             MethodArgumentNotValidException ex) {
-
         Map<String, String> errors = new HashMap<>();
         ex.getBindingResult().getFieldErrors().forEach(error ->
-                errors.put("message", error.getDefaultMessage())
-        );
-
+                errors.put("message", error.getDefaultMessage()));
         return ResponseEntity.badRequest().body(errors);
     }
 
     @ExceptionHandler(DoctorNotFoundException.class)
-    public ResponseEntity<Map<String, String>>handleDoctorNotFoundExceptions(
+    public ResponseEntity<Map<String, String>> handleDoctorNotFoundExceptions(
             DoctorNotFoundException ex){
         Map<String, String> errors = new HashMap<>();
         errors.put("message", ex.getMessage());
@@ -36,26 +33,15 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(PatientNotFoundException.class)
-    public ResponseEntity<Map<String, String>>handlePatientNotFoundExceptions(
+    public ResponseEntity<Map<String, String>> handlePatientNotFoundExceptions(
             PatientNotFoundException ex){
         Map<String, String> errors = new HashMap<>();
         errors.put("message", ex.getMessage());
         return ResponseEntity.badRequest().body(errors);
     }
 
-    @ExceptionHandler(AppointmentAlreadyBookedException.class)
-    public ResponseEntity<Map<String, String>> handleAlreadyBookedExceptions(
-            AppointmentAlreadyBookedException ex
-    )
-    {
-        Map<String, String> error = new HashMap<>();
-        error.put("message", ex.getMessage());
-        return ResponseEntity.badRequest().body(error);
-    }
-
     @ExceptionHandler(EmailAlreadyUsedException.class)
-    public ResponseEntity<Map<String, String>> handleEmailAleradyUsedException(EmailAlreadyUsedException ex)
-    {
+    public ResponseEntity<Map<String, String>> handleEmailAleradyUsedException(EmailAlreadyUsedException ex) {
         Map<String, String> error = new HashMap<>();
         error.put("message", ex.getMessage());
         return ResponseEntity.badRequest().body(error);

@@ -30,9 +30,7 @@ public class DoctorController {
     @GetMapping("/search")
     public List<Doctor> findDoctorByName(
             @RequestParam(required = false) String name,
-            @RequestParam(required = false) String email
-    )
-    {
+            @RequestParam(required = false) String email){
         return doctorService.findDoctor(name,email);
     }
 }

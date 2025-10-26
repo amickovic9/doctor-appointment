@@ -1,12 +1,10 @@
 package com.doctor.doctor.domain;
 
 import com.doctor.doctor.dto.doctor.CreateDoctorRequest;
-import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.NonNull;
 
 
 @Entity

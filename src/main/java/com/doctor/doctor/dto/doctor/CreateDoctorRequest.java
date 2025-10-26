@@ -14,6 +14,15 @@ public class CreateDoctorRequest {
 
     @NotBlank(message = "You must provide a doctor phone number")
     private String phoneNumber;
+
+    @Override
+    public String toString() {
+        return "CreateDoctorRequest{" +
+                "name='" + name + '\'' +
+                ", email='" + email + '\'' +
+                ", phoneNumber='" + phoneNumber + '\'' +
+                '}';
+    }
 }
 
 

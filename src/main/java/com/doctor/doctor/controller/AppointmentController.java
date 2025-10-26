@@ -5,8 +5,11 @@ import com.doctor.doctor.dto.appointment.CreateAppointmentRequest;
 import com.doctor.doctor.enums.AppointmentStatus;
 import com.doctor.doctor.service.AppointmentService;
 import jakarta.validation.Valid;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import  com.doctor.doctor.config.RabbitMQConfig;
+
 
 import java.util.List;
 
@@ -16,6 +19,9 @@ public class AppointmentController {
 
     @Autowired
     private AppointmentService appointmentService;
+
+    @Autowired
+    private RabbitTemplate rabbitTemplate;
 
     @GetMapping
     public List<Appointment> findAllAppointments(){
@@ -32,7 +38,7 @@ public class AppointmentController {
 
     @PostMapping
     public void createAppointment(@Valid @RequestBody CreateAppointmentRequest request){
-        appointmentService.createAppointment(request);
+        rabbitTemplate.convertAndSend(RabbitMQConfig.QUEUE, request);
     }
 
 }

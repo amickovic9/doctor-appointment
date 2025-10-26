@@ -13,4 +13,13 @@ public class CreatePatientRequest {
 
     @NotBlank(message = "You most provide a phone number for patient")
     private String phoneNumber;
+
+    @Override
+    public String toString() {
+        return "CreatePatientRequest{" +
+                "name='" + name + '\'' +
+                ", email='" + email + '\'' +
+                ", phoneNumber='" + phoneNumber + '\'' +
+                '}';
+    }
 }

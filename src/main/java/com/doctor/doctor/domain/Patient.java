@@ -20,7 +20,6 @@ public class Patient {
     private String email;
     private String phoneNumber;
 
-
     public Patient(CreatePatientRequest request){
         this.name = request.getName();
         this.phoneNumber = request.getPhoneNumber();

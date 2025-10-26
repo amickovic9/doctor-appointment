@@ -7,8 +7,9 @@ import com.doctor.doctor.dto.appointment.CreateAppointmentRequest;
 import com.doctor.doctor.enums.AppointmentStatus;
 import com.doctor.doctor.exception.DoctorNotFoundException;
 import com.doctor.doctor.exception.PatientNotFoundException;
-import com.doctor.doctor.handler.AppointmentAlreadyBookedException;
 import com.doctor.doctor.repository.AppointmentRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,6 +31,8 @@ public class AppointmentService {
     @Autowired
     private PatientService patientService;
 
+    private static final Logger logger = LoggerFactory.getLogger(AppointmentService.class);
+
     @Transactional(readOnly = true)
     public List<Appointment> findAllAppointments() {
         return appointmentRepository.findAll();
@@ -37,6 +40,7 @@ public class AppointmentService {
 
     @Transactional(readOnly = true)
     public List<Appointment> searchAppointments(String doctorName, String patientName, AppointmentStatus status) {
+        logger.info("Search: doctor name: " + doctorName + " patient name: " + patientName, " status " + status);
         if (doctorName != null && patientName != null && status != null) {
             return appointmentRepository.findByDoctorNameAndPatientNameAndStatus(doctorName, patientName, status);
         } else if (doctorName != null && patientName != null) {
@@ -59,28 +63,29 @@ public class AppointmentService {
     @Transactional
     public void createAppointment(CreateAppointmentRequest request) {
             Optional<Doctor> doctorOpt = doctorService.findById(request.getDoctorId());
-            if (doctorOpt.isEmpty()) throw new DoctorNotFoundException("Invalid doctor id");
+            if (doctorOpt.isEmpty()) throw new DoctorNotFoundException("Invalid doctor id " + request.getDoctorId());
             Doctor doctor = doctorOpt.get();
 
             Optional<Patient> patientOpt = patientService.findById(request.getPatientId());
-            if(patientOpt.isEmpty()) throw new PatientNotFoundException("Invalid patient id");
+            if(patientOpt.isEmpty()) throw new PatientNotFoundException("Invalid patient id " + request.getPatientId());
 
             LocalDateTime appointmentEndTime = request.getAppointmentTime().plusHours(1);
-
-            List<Appointment> existingAppointments = appointmentRepository.findByDoctorName(doctor.getName());
-            for (Appointment a : existingAppointments){
-                LocalDateTime start = a.getTime();
-                LocalDateTime end = start.plusHours(1).plusMinutes(1);
-                if (appointmentEndTime.isAfter(start) & appointmentEndTime.isBefore(end))
-                    throw new AppointmentAlreadyBookedException("There is already booked termin for that doctor in that time");
-            }
 
             Patient patient = patientOpt.get();
             Appointment appointment = new Appointment();
             appointment.setDoctor(doctor);
             appointment.setPatient(patient);
             appointment.setTime(request.getAppointmentTime());
+            appointment.setStatus(AppointmentStatus.ACCEPTED);
 
+
+        List<Appointment> existingAppointments = appointmentRepository.findByDoctorName(doctor.getName());
+            for (Appointment a : existingAppointments){
+                LocalDateTime start = a.getTime();
+                LocalDateTime end = start.plusHours(1).plusMinutes(1);
+                if (appointmentEndTime.isAfter(start) & appointmentEndTime.isBefore(end))
+                    appointment.setStatus(AppointmentStatus.DECLINED);
+            }
             appointmentRepository.save(appointment);
     }
 }
